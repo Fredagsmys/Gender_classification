@@ -7,57 +7,59 @@ import sklearn.discriminant_analysis as skl_da
 import sklearn.neighbors as skl_nb
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import MinMaxScaler as MMScaler
+import seaborn as sns
 
 def choose_data(df):
     newdf = pd.DataFrame({
                         # "percent words female": df['Number words female']/df['Total words'],
                         # "percent words male": df['Number words male']/df['Total words'],
                         "Number words female": df['Number words female'],
-                        "Number words male": df['Number words male'],
+                        # "Number words male": df['Number words male'],
                         "Total words": df['Total words'],
-                        "Number of words lead": df['Number of words lead'],
-                        "Difference in words lead and co-lead":df['Difference in words lead and co-lead'],
-                        "Number of male actors":df['Number of male actors'],
-                        "Year":df['Year'],
-                        "Number of female actors":df['Number of female actors'],                        
-                        "Gross":df['Gross'],
-                        "Mean Age Male":df['Mean Age Male'],
+                        "Number of words lead": df['Number of words lead']*1.1,
+                        "Difference in words lead and co-lead":df['Difference in words lead and co-lead']*1.5,
+                        "Number of male actors":df['Number of male actors']*1,
+                        # "Year":df['Year'],
+                        "Number of female actors":df['Number of female actors'],                       
+                        "Gross":df['Gross']*1.5,
+                        "Mean Age Male":df['Mean Age Male']*0.8,
                         "Mean Age Female":df['Mean Age Female'],
                         "Age Lead":df['Age Lead'],
-                        "Age Co-Lead":df['Age Co-Lead'],
-                        "Lead":df['Lead'],
+                        "Age Co-Lead":df['Age Co-Lead']*0.01,
+                        # "Lead":df['Lead'],
                         })
     return newdf
 
 
 train_data = pd.read_csv('train.csv')
 test_data = pd.read_csv('test.csv')
+# sns.pairplot(train_data[['Year', 'Gross']])
+# plt.show()
+
 # plt.plot(train_data['Lead'])
 
 X_test = test_data
 #==============DATA ANALYSIS=============
 
+# scaler = MMScaler()
+
+X_train = train_data.loc[:, train_data.columns != 'Lead']
+y_train = train_data['Lead']
 
 
+X_test=(X_test-X_test.mean())/X_test.std()
+X_train=(X_train-X_train.mean())/X_train.std()
 
-
-
-
-scaler = MMScaler()
-
-
-train_data = choose_data(train_data)
-print(train_data['Number words female'])
-print(train_data['Number words male'])
-print(train_data['Total words'])
+X_train = choose_data(X_train)
+# print(train_data['Number words female'])
+# print(train_data['Number words male'])
+print(X_train['Total words'])
 # print(train_data['Lead'].describe())
-X_train = np.array(train_data.loc[:, train_data.columns != 'Lead'])
-y_train = np.array(train_data['Lead'])
+
 
 
 # normalized data
-# X_test = scaler.fit_transform(X_test)
-# X_train = scaler.fit_transform(X_train)
+
 # X_val = scaler.fit_transform(X_val)
 
 # non-noralized data
@@ -78,7 +80,6 @@ print(scores.mean())
 print("\n=================QDA=================")
 QDA = skl_da.QuadraticDiscriminantAnalysis()
 scoresQDA = cross_val_score(QDA,X_train,y_train,cv=5,scoring="accuracy")
-QDA.fit(X_train,y_train)
+# QDA.fit(X_train,y_train)
 # print(QDA.predict(X_test))
 print(scoresQDA.mean())
-scoresQDA

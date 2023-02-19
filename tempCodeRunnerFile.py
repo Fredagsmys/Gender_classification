@@ -1,2 +1,2 @@
-y_train,cv=5,scoring="accuracy")
-QDA.fit(X_train,y_train)
+
+# response = sqldf(text("SELECT 'Year' FROM 
