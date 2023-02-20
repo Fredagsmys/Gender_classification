@@ -1,11 +1,12 @@
 import pandas as pd
 import numpy as np
+import sklearn as skl
 import matplotlib.pyplot as plt
 import sklearn.preprocessing as skl_pre
 import sklearn.linear_model as skl_lm
 import sklearn.discriminant_analysis as skl_da
 import sklearn.neighbors as skl_nb
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, StratifiedGroupKFold, StratifiedKFold
 import seaborn as sns
 
 def choose_data(df):
@@ -32,14 +33,8 @@ def choose_data(df):
 
 train_data = pd.read_csv('train.csv')
 test_data = pd.read_csv('test.csv')
-# sns.pairplot(train_data[['Year', 'Gross']])
-# plt.show()
-
-# plt.plot(train_data['Lead'])
 
 X_test = test_data
-#==============DATA ANALYSIS=============
-
 
 X_train = train_data.loc[:, train_data.columns != 'Lead']
 y_train = train_data['Lead']
@@ -51,27 +46,27 @@ X_train=(X_train-X_train.mean())/X_train.std()
 X_train = choose_data(X_train)
 print(X_train['Total words'])
 
-
-
-
-# non-noralized data
-# test_data = X_test
-# train_data = X_train
-# X_val = X_val
-
 np.random.seed(200)
 
+def dokfold(X,Y,model,splits):
+    result = []
+    for i, (trainI, testI) in enumerate(splits):
+        model.fit(X.iloc[trainI], Y.iloc[trainI])
+        prediction = model.predict(X.iloc[testI])
+        answer = Y.iloc[testI]
+        result.append(np.mean(answer == prediction))
+    return np.mean(result)
 
-
-
+k = 5
+kfold = StratifiedKFold(n_splits=k, shuffle=True)
+splits = kfold.split(X_train, y_train)
 LDA = skl_da.LinearDiscriminantAnalysis()
 print("\n=================LDA=================")
-scores = cross_val_score(LDA,X_train,y_train,cv=5,scoring="accuracy")
-print(scores.mean())
-
+accuracyLDA = dokfold(X_train,y_train, LDA, splits)
+print(f'Avg accuracy k-fold: {accuracyLDA}')
 print("\n=================QDA=================")
+
+splits = kfold.split(X_train, y_train)
 QDA = skl_da.QuadraticDiscriminantAnalysis()
-scoresQDA = cross_val_score(QDA,X_train,y_train,cv=5,scoring="accuracy")
-# QDA.fit(X_train,y_train)
-# print(QDA.predict(X_test))
-print(scoresQDA.mean())
+accuracyQDA = dokfold(X_train,y_train, QDA, splits)
+print(f'Avg accuracy k-fold: {accuracyQDA}')
