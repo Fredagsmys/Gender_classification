@@ -1,3 +1,3 @@
-haracter')
-plt.ylabel('Gross income')
-plt.savefig('boxplot')
+
+kfold = StratifiedKFold(n_splits=k, shuffle=True)
+splits = kfold.split(X_t
