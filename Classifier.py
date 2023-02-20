@@ -6,7 +6,6 @@ import sklearn.linear_model as skl_lm
 import sklearn.discriminant_analysis as skl_da
 import sklearn.neighbors as skl_nb
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import MinMaxScaler as MMScaler
 import seaborn as sns
 
 def choose_data(df):
@@ -41,7 +40,6 @@ test_data = pd.read_csv('test.csv')
 X_test = test_data
 #==============DATA ANALYSIS=============
 
-# scaler = MMScaler()
 
 X_train = train_data.loc[:, train_data.columns != 'Lead']
 y_train = train_data['Lead']
@@ -51,23 +49,17 @@ X_test=(X_test-X_test.mean())/X_test.std()
 X_train=(X_train-X_train.mean())/X_train.std()
 
 X_train = choose_data(X_train)
-# print(train_data['Number words female'])
-# print(train_data['Number words male'])
 print(X_train['Total words'])
-# print(train_data['Lead'].describe())
 
 
 
-# normalized data
-
-# X_val = scaler.fit_transform(X_val)
 
 # non-noralized data
 # test_data = X_test
 # train_data = X_train
 # X_val = X_val
 
-
+np.random.seed(200)
 
 
 
