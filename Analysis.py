@@ -47,4 +47,10 @@ plt.grid(True)
 plt.savefig('GrossByGender')
 plt.show()
 
+b = sns.boxplot(x = "Lead",y = "Age Lead",data=train_data,width=0.95)
+b.set_xlabel("Gender of lead character",fontsize=15)
+b.set_ylabel("Age Lead",fontsize=15)
+plt.grid(True)
+# plt.savefig('GrossByGender')
+plt.show()
 
