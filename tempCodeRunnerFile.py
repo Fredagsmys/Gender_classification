@@ -1,3 +1,4 @@
-
-kfold = StratifiedKFold(n_splits=k, shuffle=True)
-splits = kfold.split(X_t
+in_test_split(X_)
+# clf = GridSearchCV(QDA,params,cv=5)
+# reg_params = clf.get_params()
+# print(f"best reg model {reg_params}")

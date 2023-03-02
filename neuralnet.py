@@ -61,8 +61,8 @@ def dokfold(X,Y,model,splits):
 k = 5
 kfold = StratifiedKFold(n_splits=k, shuffle=True)
 splits = kfold.split(X_train, y_train)
-network_struct = (500,2)
-model = skl_nn.MLPClassifier(solver='lbfgs', hidden_layer_sizes=network_struct, max_iter= 1000,alpha=3e-3)
+network_struct = (200,2)
+model = skl_nn.MLPClassifier(solver='lbfgs', hidden_layer_sizes=network_struct, max_iter=1000,alpha=10e-3)
 ts = time()
 accuracyNN = dokfold(X_train,y_train, model, splits)
 print(f'run time: {time()-ts} seconds')
@@ -71,8 +71,8 @@ struct = [11,2]
 for _ in range(network_struct[1]):
     struct.insert(1,network_struct[0])
 
-network=VisNN.DrawNN(struct)
-network.draw()
+# network=VisNN.DrawNN(struct)
+# network.draw()
 # model.fit(X_train,y_train)
 # pred = model.predict(X_train)
 # print(np.mean(pred==y_train))
